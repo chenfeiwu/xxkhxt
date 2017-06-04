@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false" monitoring="autodetect"
+         dynamicConfig="true">
+         
+    <diskStore path="java.io.tmpdir/busck02"/>
+    
+    <cacheManagerPeerListenerFactory
+		class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
+		properties="hostName=localhost, port=40001, socketTimeoutMillis=2000"/>
+    
+    
+    <cacheManagerPeerProviderFactory 
+        class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory" 
+        properties="
+        socketTimeoutMillis=2000,
+        peerDiscovery=manual,
+        rmiUrls=//192.168.137.56:40002/ZDCache|//192.168.137.56:40002/myRealm.authenticationCache|//192.168.137.56:40002/shiro-activeSessionCache|//192.168.137.56:40002/org.apache.shiro.realm.text.PropertiesRealm-0-accounts"
+    />
+    
+    <defaultCache 
+        maxElementsInMemory="1000" 
+        eternal="false"
+        timeToIdleSeconds="120" 
+        timeToLiveSeconds="120" 
+        overflowToDisk="true"
+        maxElementsOnDisk="10000000" 
+        diskPersistent="false"
+        diskExpiryThreadIntervalSeconds="120" 
+        memoryStoreEvictionPolicy="LRU" />
+        
+</ehcache>

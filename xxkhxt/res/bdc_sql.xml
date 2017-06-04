@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlGroup name="bdc">
+	<sql id="getList">
+		select * from qx_ryxx where xm like '%$name$%'
+	</sql>
+	<!-- 获取法官证件信息 -->
+	<sql id="getFgzjInfo">
+		select ltrim(@rowno:=@rowno+1) as xh, '查控员工作（公务）证' as zjmc,
+		bar.gzzbh as gzzbm, bar.gwzbh as gwzbm, fj.*
+		from 
+		(
+		SELECT buspkid,
+		MAX(CASE WHEN fjfl = 'GZZ' THEN fjnr END ) gzz,
+		MAX(CASE WHEN fjfl = 'GZZ' THEN fjhz END ) gzzwjgs,
+		MAX(CASE WHEN fjfl = 'GWZ' THEN fjnr ELSE 0 END ) gwz,
+		MAX(CASE WHEN fjfl = 'GWZ' THEN fjhz END ) gwzwjgs
+		FROM jzck_fj, (select @rowno:=0) t
+		WHERE bustable = 'ck_bar'
+		GROUP BY buspkid
+		) fj
+		inner join ck_bar bar
+		on fj.buspkid = bar.barid
+		inner join ck_jbxx jb
+		on jb.lclsh = bar.lclsh
+		inner join (select distinct(sid) from ck_xzxx where seq = #bdhm#) xz
+		on xz.sid = jb.sid
+	</sql>
+	<!-- 获取xzxx_sub批次号 -->
+	<sql id="getCkxzbh">
+		select (
+		case when (max(ckxzbh)) is null 
+		then CONCAT(replace(CURDATE(), '-', ''), '0000001') 
+		else (max(ckxzbh) + 1) end
+		) nextno 	
+		from ck_xzxx_sub
+		where ckxzbh like CONCAT(replace(CURDATE(), '-', ''),'%')
+	</sql>
+</sqlGroup>
