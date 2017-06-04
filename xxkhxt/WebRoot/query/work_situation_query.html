@@ -9,7 +9,7 @@
 <link href="../css/base.css" rel="stylesheet">
 <link href="../css/pages/statistics_query/work_situation_query.css" rel="stylesheet">
 </head> 
-<body>
+<body ng-app="work_situation_query"  ng-controller="cxtjCtrl">
 	<div class="crumbs">
         <i class="crumbs-arrow"></i>
         <a href="javascript:;" class="crumbs-label">工作纪实查询</a>
@@ -69,13 +69,18 @@
               <td style="width:auto;">工作纪实</td>
             </thead>
             <tbody>
-              <tr>
-                <td colspan="4">没有数据</td>
+              <tr ng-repeat="m in list">
+                <!-- <td colspan="4">没有数据</td> -->
+                <td>{{m.annual_summary}}</td>
+                <td>{{m.update_time |limitTo:4}}</td>
+                <td>{{m.update_time |limitTo:10}}</td>
+                <td>{{m.summary_review}}</td>
               </tr>
             </tbody> 
          </table>
     </div>
 </body> 
+<script type="text/javascript" src="../js/angular.min.js"></script>
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/global.js"></script>
 <script type="text/javascript" src="../js/jquery.select.js"></script>
@@ -86,7 +91,15 @@
 
 </html>
 <script type="text/javascript">
-
+	var app = angular.module('work_situation_query', []);
+	
+	app.controller('cxtjCtrl', function($scope, $http) {
+		$http.post('../gzjsList').then(function(response){
+			$scope.list = response.data;
+		}, function(response){
+			
+		});
+	});
     $('select').select();
     $("#start").datepicker({
         "language":"zh-CN",

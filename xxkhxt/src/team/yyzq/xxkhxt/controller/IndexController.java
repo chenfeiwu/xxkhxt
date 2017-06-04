@@ -11,7 +11,7 @@ public class IndexController extends Controller {
 	static Logger log  =  Logger.getLogger(IndexController.class);
 	
 	@ActionKey("/")
-	public void test(){
+	public void main(){
 		render("/main.html");
 	}
 }
